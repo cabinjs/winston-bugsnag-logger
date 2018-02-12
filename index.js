@@ -5,7 +5,6 @@ const winston = require('winston');
 const util = require('util');
 
 function BugsnagLogger(options) {
-
   options = options || {};
   options = _.defaultsDeep(options, {
     apiKey: process.env.BUGSNAG_API_KEY || '',
@@ -37,9 +36,19 @@ function BugsnagLogger(options) {
     this.bugsnag = options.bugsnag;
   } else {
     this.bugsnag = bugsnag;
+
+    // bugsnag-node 2.1.2:
+    // sessionTrackingEnabled renamed as autoCaptureSessions
+    if (_.has(options, 'config.sessionTrackingEnabled')) {
+      _.set(
+        options,
+        'config.autoCaptureSessions',
+        _.get(options, 'config.sessionTrackingEnabled')
+      );
+    }
+
     this.bugsnag.register(options.apiKey, options.config);
   }
-
 };
 
 // Inherit from `winston.Transport`
@@ -50,7 +59,6 @@ util.inherits(BugsnagLogger, winston.Transport);
 winston.transports.BugsnagLogger = BugsnagLogger;
 
 BugsnagLogger.prototype.log = function(level, msg, meta, fn) {
-
   if (this.silent) return fn(null, true);
   if (!(level in this._levelsMap)) return fn(null, true);
 
@@ -78,7 +86,6 @@ BugsnagLogger.prototype.log = function(level, msg, meta, fn) {
   this.bugsnag.notify(msg, meta, function() {
     fn(null, true);
   });
-
 }
 
 module.exports = BugsnagLogger;

@@ -1,17 +1,17 @@
 {
   "name": "winston-bugsnag-logger",
   "description": "The maintained and well-documented Bugsnag transport for the winston logger",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Nick Baugh",
   "bugs": {
     "url": "https://github.com/niftylettuce/winston-bugsnag-logger/issues"
   },
   "dependencies": {
-    "bugsnag": "^1.12.0",
+    "bugsnag": "^2.1.3",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
-    "winston": "^2.3.1"
+    "winston": "^2.4.0"
   },
   "engines": {
     "node": ">= 4.8.4"
