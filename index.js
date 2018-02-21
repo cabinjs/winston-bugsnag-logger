@@ -62,8 +62,20 @@ BugsnagLogger.prototype.log = function(level, msg, meta, fn) {
   if (this.silent) return fn(null, true);
   if (!(level in this._levelsMap)) return fn(null, true);
 
+  var severity = this._levelsMap[level];
+
+  if (_.isError(meta)) {
+    // bugsnag expects instances of `Error` as a first argument;
+    // otherwise, the wrong stack is tracked
+    this.bugsnag.notify(meta, {
+      message: msg,
+      severity: severity,
+    });
+    return fn(null, true);
+  }
+
   meta = meta || {};
-  meta.severity = this._levelsMap[level];
+  meta.severity = severity;
   meta.metaData = meta.metaData || {};
 
   //
